@@ -75,9 +75,9 @@ String serializeJsonAsString(int temperature, int humidity, int heatIndex, int w
    
    doc["waterLevel"] = waterLevel;
    doc["ts"] = timestamp;
-   doc["humidity"] = (double)humidity;
-   doc["temperature"] = (double)temperature;
-   doc["heatIndex"] = (double)heatIndex;
+   doc["humidity"] = humidity;
+   doc["temperature"] = temperature;
+   doc["heatIndex"] = heatIndex;
    
    serializeJson(doc, output);
    
@@ -114,7 +114,7 @@ void loop() {
    // Reading temperature or humidity takes about 250 milliseconds!
    // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
    int humidity = round(dht.readHumidity());
-   float temperature = round(dht.readTemperature());
+   int temperature = round(dht.readTemperature());
 
    // Check if any reads failed and exit early (to try again).
    if (isnan(humidity) || isnan(temperature)) {
@@ -131,7 +131,7 @@ void loop() {
 
     // Serialize values as stringified json and publish to mqtt
     const String output = serializeJsonAsString(temperature,humidity,heatIndex,waterLevel,timestamp);
-    Serial.println(output);
+
     client.publish(topic,output.c_str());
     
     delay(5000);
